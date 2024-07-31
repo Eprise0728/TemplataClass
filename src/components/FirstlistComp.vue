@@ -111,6 +111,7 @@
     }
     .textBox2{
         margin-top: 6%;
+        margin-bottom: 3%;
         width: 70%;
         height: 70dvh;
         border: 1px solid black;

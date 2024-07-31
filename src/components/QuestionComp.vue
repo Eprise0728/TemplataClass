@@ -4,7 +4,7 @@ import Questionview2 from './Questionview2.vue';
 export default{
     data(){
         return{
-            Questionview:"1",
+            Questionview:1,
         }   
     },
     components:{
@@ -29,6 +29,7 @@ export default{
             </div>
             <div  v-show="Questionview===2">
                 <Questionview2 />
+                <button type="button" @click="Questionview = 1" class="btn">上一步</button>
             </div>
             <div  v-show="Questionview===3">
                 <Questionview3 />
@@ -45,7 +46,7 @@ export default{
 
 <style scoped lang="scss">
 .questionview{
-    width: 100dvw;
+    width: 100%;
     height: 100dvh;
     display: flex;
     justify-content: center;
