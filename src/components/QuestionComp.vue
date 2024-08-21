@@ -1,6 +1,7 @@
 <script>
 import Questionview1 from './Questionview1.vue';
 import Questionview2 from './Questionview2.vue';
+
 export default{
     data(){
         return{
