@@ -19,6 +19,27 @@ const router = createRouter({
       name: 'Question',
       component: () => import('../views/Question.vue')
     },
+    {
+      path: '/Questionconfirm',
+      name: 'Questionconfirm',
+      component: () => import('../views/Questionconfirm.vue')
+    },
+    {
+      path: '/UpdataQuestion/:id',
+      name: 'UpdataQuestion',
+      component: () => import('../views/UpdataQuestion.vue'),
+      props: true,
+    },
+    {
+      path: '/Updatafirm',
+      name: 'Updatafirm',
+      component: () => import('../views/Updatafirm.vue')
+    },
+    {
+      path: '/PlayerFirstList',
+      name: 'PlayerFirstList',
+      component: () => import('../views/PlayerFirstList.vue')
+    },
   ]
 })
 

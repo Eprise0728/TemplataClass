@@ -26,7 +26,7 @@ export default{
         <div class="questionviewbox">
 
             <div v-show ="Questionview===1">
-                <Questionview1 />
+                <Questionview1 @go-to-view2="Questionview = 2" />
             </div>
             <div  v-show="Questionview===2">
                 <Questionview2 />

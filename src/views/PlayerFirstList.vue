@@ -10,7 +10,6 @@ export default {
       quizzes: [],
       currentPage: 1,
       pageSize: 10,
-      selectedQuizzes: [],
     };
   },
   created() {
@@ -25,34 +24,12 @@ export default {
           endDate: this.endDate,
         });
         console.log(response.data);
-        this.quizzes = response.data.quizResList || [];
+        this.quizzes = (response.data.quizResList || []).filter(quiz => quiz.published);
       } catch (error) {
         console.error("搜索時發生錯誤:", error);
       }
     },
-    async deleteSelected() {
-      try {
-        const idsToDelete = this.selectedQuizzes.filter(id => {
-          const quiz = this.quizzes.find(q => q.id === id);
-          return quiz && !quiz.published;
-        });
-
-        if (idsToDelete.length === 0) {
-          alert("沒有符合刪除條件的問卷。");
-          return;
-        }
-        
-        await axios.post("http://localhost:8080/quiz/delete", { quizIdList: idsToDelete });
-        alert("問卷刪除成功！");
-        
-        this.searchQuiz();
-      } catch (error) {
-        console.error("刪除問卷時發生錯誤:", error);
-        alert("刪除問卷失敗，請稍後再試。");
-      }
-    }
   },
-  
   computed: {
     paginatedQuizzes() {
       const start = (this.currentPage - 1) * this.pageSize;
@@ -82,16 +59,8 @@ export default {
       </div>
     </div>
 
-    <div class="icon1">
-        <i class="fa-solid fa-trash-can" @click="deleteSelected"></i>
-      <RouterLink to="./Question" class="routeitem">
-        <i class="fa-solid fa-plus"></i>
-      </RouterLink>
-    </div>
-
     <div class="textBox2">
       <div class="texttitle">
-        <div class="deletebox"></div>
         <div class="number1">編號</div>
         <div class="name1">名稱</div>
         <div class="state1">狀態</div>
@@ -100,10 +69,7 @@ export default {
         <div class="result1">結果</div>
       </div>
 
-      <div v-for="quiz in paginatedQuizzes" :key="quiz.id" class="fakedata">
-        <div class="deletebox">
-          <input type="checkbox" :value="quiz.id" v-model="selectedQuizzes" :disabled="quiz.published != 0"/>
-        </div>
+      <div v-for="quiz in paginatedQuizzes" :key="quiz.id" class="fakedata" >
         <div class="number2">{{ quiz.id }}</div>
         <div class="name2">
           <RouterLink v-if="!quiz.published || new Date() < new Date(quiz.startDate)" :to="{ name: 'UpdataQuestion', params: { id: quiz.id } }">{{ quiz.name }}
@@ -203,22 +169,6 @@ export default {
       }
     }
   }
-  .routeitem {
-    color: black;
-    text-decoration-line: none;
-  }
-  .icon1 {
-    width: 10%;
-    position: absolute;
-    left: 14%;
-    top: 30%;
-    font-size: 1.8dvw;
-    display: flex;
-    justify-content: space-evenly;
-    .fa-trash-can{
-      cursor: pointer;
-    }
-  }
   .textBox2 {
     margin-top: 6%;
     margin-bottom: 3%;
@@ -234,11 +184,9 @@ export default {
       height: 10%;
       text-align: center;
       background-color: rgb(100, 97, 97);
-      .deletebox {
-        width: 3%;
-      }
       .number1 {
         width: 7%;
+        padding-right: 10px;
       }
       .name1 {
         width: 30%;
@@ -254,6 +202,7 @@ export default {
       }
       .result1 {
         width: 10%;
+        padding-left: 10px;
       }
     }
     .fakedata {
@@ -261,20 +210,13 @@ export default {
       height: 10%;
       display: flex;
       border-bottom: 1px solid black;
-      .deletebox {
-        width: 3%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
       .number2 {
         width: 7%;
         height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-left: 1px solid black;
+        
       }
       .name2 {
         width: 30%;
@@ -283,6 +225,7 @@ export default {
         align-items: center;
         justify-content: center;
         border-left: 1px solid black;
+        margin-left: 10px;
       }
       .state2 {
         width: 10%;

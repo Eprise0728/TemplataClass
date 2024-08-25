@@ -7,6 +7,7 @@ import { RouterLink, RouterView } from 'vue-router'
         <RouterLink to="/" class="routeitem">Home</RouterLink>
         <RouterLink to="./FirstList" class="routeitem">後台列表</RouterLink>
         <RouterLink to="./Question" class="routeitem">後台問卷</RouterLink>
+        <RouterLink to="./PlayerFirstList" class="routeitem">前台列表</RouterLink>
       </nav>
       <div class="content">
         <RouterView />
