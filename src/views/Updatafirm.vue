@@ -60,7 +60,6 @@ export default {
 
 <template>
   <div v-if="quiz">
-    <h1>{{quiz.quesList[3]}}</h1>
     <h2>預覽頁</h2>
     <p>問卷名稱: {{ quiz.name }}</p>
     <p>問卷描述: {{ quiz.description }}</p>

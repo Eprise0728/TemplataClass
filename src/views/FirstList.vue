@@ -139,13 +139,9 @@ export default {
       </div>
     </div>
     <div class="pagination">
-      <button @click="currentPage--" :disabled="currentPage === 1">
-        上一頁
-      </button>
-      <span>第 {{ currentPage }} 頁，共 {{ totalPages }} 頁</span>
-      <button @click="currentPage++" :disabled="currentPage === totalPages">
-        下一頁
-      </button>
+      <button @click="currentPage--" :disabled="currentPage === 1"><</button>
+      <span>第 {{ currentPage }} 頁 </span>
+      <button @click="currentPage++" :disabled="currentPage === totalPages">></button>
     </div>
   </div>
 </template>
@@ -164,9 +160,11 @@ export default {
   align-items: center;
   position: relative;
   font-size: 1.5dvw;
+  
   .textBox1 {
     width: 70%;
     height: 30%;
+    margin-top: 2%;
     border: 1px solid black;
     .searchbox {
       width: 50%;
@@ -185,7 +183,7 @@ export default {
       height: 8%;
       position: absolute;
       top: 14%;
-      left: 20%;
+      left: 11%;
       .date {
         width: 20%;
         height: 50%;
@@ -326,10 +324,9 @@ export default {
   }
 }
 .pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
+  position: absolute;
+  bottom: 1%;
+  left: 42%;
 
   button {
     margin: 0 10px;

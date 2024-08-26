@@ -104,7 +104,7 @@ export default {
     <div class="selectbox">
       <select class="select1" v-model="type">
         <option value="單選題">單選題</option>
-        <option value="多選題">多選題</option>
+        <option value="複選題">複選題</option>
         <option value="簡答題">簡答題</option>
       </select>
       <input type="checkbox" v-model="necessary">
@@ -114,7 +114,7 @@ export default {
       <p class="text2">選項:(多個答案請以; 分隔)</p>
       <textarea v-model="options" style="resize: none;"></textarea>
     </div>
-    <button type="button" @click="addData">{{ id !== null ? '編輯' : '加入' }}</button>
+    <button type="button" @click="addData" class="addbtn">{{ id !== null ? '編輯' : '加入' }}</button>
     <i class="fa-solid fa-trash-can icon1"></i>
     <div class="pagination">
       <button type="button" @click="prevPage" :disabled="currentPage === 0">&lt;</button>
@@ -144,7 +144,7 @@ export default {
         </div>
       </div>
     </div>
-    <button type="button" @click="submit">送出</button>
+    <button type="button" @click="submit" class="nextbtn">送出</button>
   </form>
 </template>
 
@@ -290,6 +290,26 @@ textarea {
       justify-content: center;
       border-left: 1px solid black;
     }
+  }
+}
+.addbtn{
+  font-size: 2dvw;
+  position: absolute;
+  top: 30%;
+  right: 15%;
+}
+.nextbtn{
+  font-size: 2dvw;
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+}
+.pagination{
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  button{
+    font-size: 2dvw;
   }
 }
 </style>

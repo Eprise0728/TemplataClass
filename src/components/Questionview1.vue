@@ -79,11 +79,12 @@ export default {
       結束時間:
       <input v-model="endDate" type="date" />
     </p>
-    <button @click="submitForm">下一步</button>
+    <button @click="submitForm" class="nextbtn">下一步</button>
   </div>
 </template>
 
 <style scoped lang="scss">
+
 .text1 {
   font-size: 2dvw;
   position: absolute;
@@ -128,5 +129,11 @@ textarea {
   input {
     font-size: 1.5dvw;
   }
+}
+.nextbtn{
+  font-size: 2dvw;
+  position: absolute;
+  right: 8%;
+  bottom: 5%;
 }
 </style>

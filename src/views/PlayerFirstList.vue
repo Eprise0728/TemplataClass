@@ -69,10 +69,14 @@ export default {
         <div class="result1">結果</div>
       </div>
 
-      <div v-for="quiz in paginatedQuizzes" :key="quiz.id" class="fakedata" >
+      <div v-for="quiz in paginatedQuizzes" :key="quiz.id" class="fakedata">
         <div class="number2">{{ quiz.id }}</div>
         <div class="name2">
-          <RouterLink v-if="!quiz.published || new Date() < new Date(quiz.startDate)" :to="{ name: 'UpdataQuestion', params: { id: quiz.id } }">{{ quiz.name }}
+          <RouterLink
+            v-if="!quiz.published || new Date() < new Date(quiz.startDate)"
+            :to="{ name: 'Fillin', params: { id: quiz.id } }"
+          >
+            {{ quiz.name }}
           </RouterLink>
           <span v-else>{{ quiz.name }}</span>
         </div>

@@ -25,7 +25,7 @@ const router = createRouter({
       component: () => import('../views/Questionconfirm.vue')
     },
     {
-      path: '/UpdataQuestion/:id',
+      path: '/UpdataQuestion:id',
       name: 'UpdataQuestion',
       component: () => import('../views/UpdataQuestion.vue'),
       props: true,
@@ -39,6 +39,16 @@ const router = createRouter({
       path: '/PlayerFirstList',
       name: 'PlayerFirstList',
       component: () => import('../views/PlayerFirstList.vue')
+    },
+    {
+      path: '/Fillin:id',
+      name: 'Fillin',
+      component: () => import('../views/Fillin.vue')
+    },
+    {
+      path: '/Fillinfirm',
+      name: 'Fillinfirm',
+      component: () => import('../views/Fillinfirm.vue')
     },
   ]
 })

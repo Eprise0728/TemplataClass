@@ -52,7 +52,6 @@ export default {
 
         if (this.quizzes.length > 0) {
           const quiz = this.quizzes[0];
-          console.log("問題列表:", quiz.quesList); // 打印問題列表來檢查每個問題的 type
           if (this.editingQuestion) {
             this.newQuestion = { ...this.editingQuestion };
           } else {
@@ -141,7 +140,6 @@ export default {
     // 儲存整個問卷對象到 sessionStorage
     sessionStorage.setItem("quiz", JSON.stringify(updatedQuiz));
 
-    // 導航到預覽頁
     this.$router.push("/Updatafirm");
   } catch (error) {
     console.error("送出時發生錯誤:", error);

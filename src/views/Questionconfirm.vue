@@ -69,28 +69,43 @@ export default {
 
 <template>
   <div>
-    <h2>問卷確認</h2>
     <div class="quiz-info">
-      <p><strong>問卷名稱:</strong> {{ quizName }}</p>
-      <p><strong>問卷說明:</strong> {{ quizDescription }}</p>
-      <p><strong>開始時間:</strong> {{ startDate }}</p>
-      <p><strong>結束時間:</strong> {{ endDate }}</p>
+      <p class="datebox">{{ startDate }} ~ {{ endDate }}</p>
+      <p class="quiztittle">{{ quizName }}</p>
+      <p class="textdesc">
+        <strong>問卷說明:</strong> {{ quizDescription }}
+      </p>
     </div>
-
-    <h3>問題列表:</h3>
+    <div class="playerdata">
+      <p>姓名:<input type="text" disabled="true"/></p>
+      <p>手機:<input type="text" disabled="true"/></p>
+      <p>E-mail:<input type="text" style="margin-left: 2.5%" disabled="true"/></p>
+      <p>年齡:<input type="text" disabled="true"/></p>
+    </div>
     <div v-if="questions.length > 0">
       <div class="question" v-for="(question, index) in questions" :key="index">
-        <p><strong>編號:</strong> {{ question.id }}</p>
-        <p><strong>問題內容:</strong> {{ question.qu }}</p>
-        <p><strong>問卷種類:</strong> {{ question.type }}</p>
-        <p><strong>必填:</strong> {{ question.necessary ? "是" : "否" }}</p>
-        <p v-if="question.options && question.options.length > 0">
-          <strong>選項:</strong> {{ question.options.join(", ") }}
+        <p>
+          {{ question.id }}.{{ question.qu}}<span v-if="question.necessary "> (必填)</span>
         </p>
+          <p class="questionans" v-if="question.type === '單選題' &&question.options &&question.options.length > 0">
+            <label v-for="(option, index) in question.options" :key="index">
+              <input type="radio":name="'question' + question.id":value="option" disabled="true"/>{{ option }}
+            </label>
+          </p>
+
+          <p class="questionans" v-else-if="question.type === '多選題' &&question.options &&question.options.length > 0">
+            <label v-for="(option, index) in question.options" :key="index">
+              <input type="checkbox":name="'question' + question.id":value="option" disabled="true">{{ option }}
+            </label>
+          </p>
+
+          <p v-else-if="question.type === '簡答題'">
+            <textarea :name="'question' + question.id" placeholder="請輸入答案" readonly></textarea>
+          </p>
       </div>
     </div>
 
-    <div>
+    <div class="nextbtn">
       <button @click="submitQuiz(false)">儲存問卷</button>
       <button @click="submitQuiz(true)">儲存問卷並發佈</button>
     </div>
@@ -103,10 +118,59 @@ export default {
 
 <style scoped>
 .quiz-info {
+  margin-top: 20px;
   margin-bottom: 20px;
+  .datebox {
+    text-align: end;
+    margin-right: 1%;
+    font-size: 1.5dvw;
+  }
+  .quiztittle {
+    font-size: 3dvw;
+    text-align: center;
+  }
+  .textdesc {
+    font-size: 2dvw;
+    text-align: start;
+    margin-left: 2%;
+    margin-right: 2%;
+  }
+}
+.playerdata {
+  display: flex;
+  flex-direction: column;
+  margin-left: 2%;
+  font-size: 2dvw;
+  input {
+    font-size: 2dvw;
+    margin-top: 20px;
+    margin-left: 4%;
+  }
 }
 .question {
+  margin-top: 20px;
   margin-bottom: 10px;
+  margin-left: 2%;
+  font-size: 2dvw;
+  .questionans{
+    display: flex;
+    flex-direction: column;
+    margin-left: 1%;
+  }
+  textarea{
+    width: 50%;
+    height: 20dvh;
+    overflow-wrap: break-word;
+    resize: none;
+    margin-left: 2%;
+    font-size: 2dvw;
+  }
+}
+.nextbtn {
+  display: flex;
+  justify-content: end;
+  margin-right: 2%;
+  margin-bottom: 2%;
 }
 button {
   margin-top: 20px;
