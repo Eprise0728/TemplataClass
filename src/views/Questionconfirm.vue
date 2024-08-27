@@ -56,6 +56,7 @@ export default {
         .then((response) => {
           this.responseMessage = "問卷創建成功！";
           this.responseClass = "success";
+          alert("問卷創建成功！");
           this.$router.push("/FirstList");
         })
         .catch((error) => {
@@ -72,36 +73,65 @@ export default {
     <div class="quiz-info">
       <p class="datebox">{{ startDate }} ~ {{ endDate }}</p>
       <p class="quiztittle">{{ quizName }}</p>
-      <p class="textdesc">
-        <strong>問卷說明:</strong> {{ quizDescription }}
-      </p>
+      <p class="textdesc"><strong>問卷說明:</strong> {{ quizDescription }}</p>
     </div>
     <div class="playerdata">
-      <p>姓名:<input type="text" disabled="true"/></p>
-      <p>手機:<input type="text" disabled="true"/></p>
-      <p>E-mail:<input type="text" style="margin-left: 2.5%" disabled="true"/></p>
-      <p>年齡:<input type="text" disabled="true"/></p>
+      <p>姓名:<input type="text" disabled="true" /></p>
+      <p>手機:<input type="text" disabled="true" /></p>
+      <p>
+        E-mail:<input type="text" style="margin-left: 2.5%" disabled="true" />
+      </p>
+      <p>年齡:<input type="text" disabled="true" /></p>
     </div>
     <div v-if="questions.length > 0">
       <div class="question" v-for="(question, index) in questions" :key="index">
         <p>
-          {{ question.id }}.{{ question.qu}}<span v-if="question.necessary "> (必填)</span>
+          {{ question.id }}.{{ question.qu
+          }}<span v-if="question.necessary"> (必填)</span>
         </p>
-          <p class="questionans" v-if="question.type === '單選題' &&question.options &&question.options.length > 0">
-            <label v-for="(option, index) in question.options" :key="index">
-              <input type="radio":name="'question' + question.id":value="option" disabled="true"/>{{ option }}
-            </label>
-          </p>
+        <p
+          class="questionans"
+          v-if="
+            question.type === '單選題' &&
+            question.options &&
+            question.options.length > 0
+          "
+        >
+          <label v-for="(option, index) in question.options" :key="index">
+            <input
+              type="radio"
+              :name="'question' + question.id"
+              :value="option"
+              disabled="true"
+            />{{ option }}
+          </label>
+        </p>
 
-          <p class="questionans" v-else-if="question.type === '多選題' &&question.options &&question.options.length > 0">
-            <label v-for="(option, index) in question.options" :key="index">
-              <input type="checkbox":name="'question' + question.id":value="option" disabled="true">{{ option }}
-            </label>
-          </p>
+        <p
+          class="questionans"
+          v-else-if="
+            question.type === '多選題' &&
+            question.options &&
+            question.options.length > 0
+          "
+        >
+          <label v-for="(option, index) in question.options" :key="index">
+            <input
+              type="checkbox"
+              :name="'question' + question.id"
+              :value="option"
+              disabled="true"
+            />{{ option }}
+          </label>
+        </p>
 
-          <p v-else-if="question.type === '簡答題'">
-            <textarea :name="'question' + question.id" placeholder="請輸入答案" readonly></textarea>
-          </p>
+        <p v-else-if="question.type === '簡答題'">
+          <textarea
+            :name="'question' + question.id"
+            placeholder="請輸入答案"
+            readonly
+          ></textarea>
+        </p>
       </div>
     </div>
 
@@ -152,12 +182,12 @@ export default {
   margin-bottom: 10px;
   margin-left: 2%;
   font-size: 2dvw;
-  .questionans{
+  .questionans {
     display: flex;
     flex-direction: column;
     margin-left: 1%;
   }
-  textarea{
+  textarea {
     width: 50%;
     height: 20dvh;
     overflow-wrap: break-word;

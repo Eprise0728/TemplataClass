@@ -70,52 +70,49 @@ export default {
       </div>
 
       <div v-for="quiz in paginatedQuizzes" :key="quiz.id" class="fakedata">
-        <div class="number2">{{ quiz.id }}</div>
-        <div class="name2">
-          <RouterLink
-            v-if="!quiz.published || new Date() < new Date(quiz.startDate)"
-            :to="{ name: 'Fillin', params: { id: quiz.id } }"
-          >
-            {{ quiz.name }}
-          </RouterLink>
-          <span v-else>{{ quiz.name }}</span>
-        </div>
-        <div class="state2">
-          <span
-            v-if="
-              quiz.published &&
-              new Date() >= new Date(quiz.startDate) &&
-              new Date() <= new Date(quiz.endDate)
-            "
-            >進行中</span
-          >
-          <span
-            v-else-if="quiz.published && new Date() > new Date(quiz.endDate)"
-            >已結束</span
-          >
-          <span
-            v-else-if="quiz.published && new Date() < new Date(quiz.startDate)"
-            >尚未開始</span
-          >
-          <span v-else>未發佈</span>
-        </div>
-        <div class="star2">{{ quiz.startDate }}</div>
-        <div class="end2">{{ quiz.endDate }}</div>
-        <div class="result2">前往</div>
-      </div>
+    <div class="number2">{{ quiz.id }}</div>
+    <div class="name2">
+      <RouterLink
+        v-if="quiz.published && new Date() >= new Date(quiz.startDate) && new Date() <= new Date(quiz.endDate)"
+        :to="{ name: 'Fillin', params: { id: quiz.id } }"
+      >
+        {{ quiz.name }}
+      </RouterLink>
+      <span v-else>{{ quiz.name }}</span>
+    </div>
+    <div class="state2">
+      <span
+        v-if="quiz.published && new Date() >= new Date(quiz.startDate) && new Date() <= new Date(quiz.endDate)"
+      >
+        進行中
+      </span>
+      <span v-else-if="quiz.published && new Date() > new Date(quiz.endDate)">
+        已結束
+      </span>
+      <span v-else-if="quiz.published && new Date() < new Date(quiz.startDate)">
+        尚未開始
+      </span>
+      <span v-else>未發佈</span>
+    </div>
+    <div class="star2">{{ quiz.startDate }}</div>
+    <div class="end2">{{ quiz.endDate }}</div>
+    <div class="result2">前往</div>
+  </div>
 
       <div v-if="quizzes.length === 0" class="fakedata no-quiz">
         <div class="name2">沒有找到符合條件的問卷。</div>
       </div>
     </div>
-    <div class="pagination">
+    <div class="paginbox">
+      <div class="pagination">
       <button @click="currentPage--" :disabled="currentPage === 1">
         上一頁
       </button>
-      <span>第 {{ currentPage }} 頁，共 {{ totalPages }} 頁</span>
+      <span>第 {{ currentPage }} 頁</span>
       <button @click="currentPage++" :disabled="currentPage === totalPages">
         下一頁
       </button>
+    </div>
     </div>
   </div>
 </template>
@@ -138,6 +135,7 @@ export default {
     width: 70%;
     height: 30%;
     border: 1px solid black;
+    margin-top:2%;
     .searchbox {
       width: 50%;
       height: 8%;
@@ -151,11 +149,13 @@ export default {
       }
     }
     .datebox {
-      width: 65%;
+      width: 60%;
       height: 8%;
       position: absolute;
       top: 14%;
-      left: 20%;
+      left: 21.1%;
+      display: flex;
+      justify-content: start;
       .date {
         width: 20%;
         height: 50%;
@@ -174,7 +174,7 @@ export default {
     }
   }
   .textBox2 {
-    margin-top: 6%;
+    margin-top: 3%;
     margin-bottom: 3%;
     width: 70%;
     height: 70dvh;
@@ -191,22 +191,28 @@ export default {
       .number1 {
         width: 7%;
         padding-right: 10px;
+        background-color: rgb(100, 97, 97);
       }
       .name1 {
         width: 30%;
+        background-color: rgb(100, 97, 97);
       }
       .state1 {
         width: 10%;
+        background-color: rgb(100, 97, 97);
       }
       .star1 {
         width: 20%;
+        background-color: rgb(100, 97, 97);
       }
       .end1 {
         width: 20%;
+        background-color: rgb(100, 97, 97);
       }
       .result1 {
         width: 10%;
         padding-left: 10px;
+        background-color: rgb(100, 97, 97);
       }
     }
     .fakedata {
@@ -272,12 +278,12 @@ export default {
     }
   }
 }
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-
+.paginbox{
+  width: 20%;
+  height: 10%;
+  position: absolute;
+  left: 37%;
+  bottom: -5%;
   button {
     margin: 0 10px;
     padding: 5px 10px;
@@ -286,12 +292,11 @@ export default {
 
     &:disabled {
       cursor: not-allowed;
-      opacity: 0.5;
+      background-color: rgb(100, 97, 97);
     }
   }
-
   span {
-    font-size: 1.2dvw;
+    font-size: 1dvw;
   }
 }
 </style>

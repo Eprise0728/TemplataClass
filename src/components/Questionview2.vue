@@ -2,14 +2,16 @@
 export default {
   data() {
     return {
-      qu: '',
-      type: '單選題',
-      options: '', // 選項
+      qu: "",
+      type: "單選題",
+      options: "",
       necessary: false,
       dataList: [],
       currentPage: 0,
       itemsPerPage: 4,
-      id: null // 用於編輯問題
+      id: null,
+      selectedQuestions: [],
+      isAllSelected: false,
     };
   },
   computed: {
@@ -17,16 +19,17 @@ export default {
       const start = this.currentPage * this.itemsPerPage;
       const end = start + this.itemsPerPage;
       return this.dataList.slice(start, end);
-    }
+    },
   },
   mounted() {
     this.loadQuizData();
   },
   methods: {
     loadQuizData() {
-      const quizData = sessionStorage.getItem('quizData');
+      const quizData = sessionStorage.getItem("quizData");
       if (quizData) {
-        const { quizName, quizDescription, startDate, endDate } = JSON.parse(quizData);
+        const { quizName, quizDescription, startDate, endDate } =
+          JSON.parse(quizData);
         this.quizName = quizName;
         this.quizDescription = quizDescription;
         this.startDate = startDate;
@@ -40,8 +43,8 @@ export default {
           id: this.id + 1,
           qu: this.qu,
           type: this.type,
-          options: this.options, // 儲存選項
-          necessary: this.necessary
+          options: this.options,
+          necessary: this.necessary,
         };
         this.id = null;
       } else {
@@ -51,7 +54,7 @@ export default {
           qu: this.qu,
           type: this.type,
           options: this.options, // 儲存選項
-          necessary: this.necessary
+          necessary: this.necessary,
         });
       }
       this.resetForm();
@@ -80,65 +83,96 @@ export default {
       }
     },
     resetForm() {
-      this.qu = '';
-      this.type = '單選題';
-      this.options = ''; // 重置選項
+      this.qu = "";
+      this.type = "單選題";
+      this.options = ""; // 重置選項
       this.necessary = false;
     },
-    updatePagination() {
-      // 這裡可以根據需要更新分頁狀態
-    },
+    updatePagination() {},
     submit() {
-      sessionStorage.setItem('questions', JSON.stringify(this.dataList));
-      this.$router.push('/Questionconfirm');
-    }
-  }
+      sessionStorage.setItem("questions", JSON.stringify(this.dataList));
+      this.$router.push("/Questionconfirm");
+    },
+    deleteSelectedQuestions() {
+      this.dataList = this.dataList.filter(
+        (item) => !this.selectedQuestions.includes(item.id)
+      );
+      this.selectedQuestions = [];
+      this.isAllSelected = false;
+      this.dataList.forEach((item, index) => {
+        item.id = index + 1;
+      });
+      this.updatePagination();
+    },
+    toggleSelectAll(event) {
+      this.isAllSelected = event.target.checked;
+      this.selectedQuestions = this.isAllSelected
+        ? this.dataList.map((item) => item.id)
+        : [];
+    },
+  },
 };
 </script>
 
 <template>
   <form>
-    <p class="qu">問題:
-      <input type="text" v-model="qu">
+    <p class="qu">
+      問題:
+      <input type="text" v-model="qu" />
     </p>
     <div class="selectbox">
       <select class="select1" v-model="type">
         <option value="單選題">單選題</option>
-        <option value="複選題">複選題</option>
+        <option value="複選題">多選題</option>
         <option value="簡答題">簡答題</option>
       </select>
-      <input type="checkbox" v-model="necessary">
+      <input type="checkbox" v-model="necessary" />
       <span>必填</span>
     </div>
     <div class="text2box">
       <p class="text2">選項:(多個答案請以; 分隔)</p>
-      <textarea v-model="options" style="resize: none;"></textarea>
+      <textarea v-model="options" style="resize: none"></textarea>
     </div>
-    <button type="button" @click="addData" class="addbtn">{{ id !== null ? '編輯' : '加入' }}</button>
-    <i class="fa-solid fa-trash-can icon1"></i>
+    <button type="button" @click="addData" class="addbtn">
+      {{ id !== null ? "編輯" : "加入" }}
+    </button>
+    <i class="fa-solid fa-trash-can icon1" @click="deleteSelectedQuestions"></i>
     <div class="pagination">
-      <button type="button" @click="prevPage" :disabled="currentPage === 0">&lt;</button>
-      <button type="button" @click="nextPage" :disabled="(currentPage + 1) * itemsPerPage >= dataList.length">&gt;</button>
+      <button type="button" @click="prevPage" :disabled="currentPage === 0">
+        &lt;
+      </button>
+      <button
+        type="button"
+        @click="nextPage"
+        :disabled="(currentPage + 1) * itemsPerPage >= dataList.length"
+      >
+        &gt;
+      </button>
     </div>
     <div class="text3box">
       <div class="texttitle">
-        <div class="deletebox"></div>
+        <div class="deletebox">
+          <input
+            type="checkbox"
+            :checked="isAllSelected"
+            @change="toggleSelectAll"
+          />
+        </div>
         <div class="number1">編號</div>
         <div class="name1">內容</div>
         <div class="state1">問卷種類</div>
         <div class="star1">必填</div>
         <div class="end1">編輯</div>
       </div>
+
       <div class="fakedata" v-for="(item, index) in paginatedData" :key="index">
         <div class="deletebox">
-          <input type="checkbox" @change="deleteData(index)">
+          <input type="checkbox" v-model="selectedQuestions" :value="item.id" />
         </div>
         <div class="number2">{{ item.id }}</div>
         <div class="name2">{{ item.qu }}</div>
         <div class="state2">{{ item.type }}</div>
-        <div class="star2">
-          <input type="checkbox" :checked="item.necessary" disabled>
-        </div>
+        <div class="star2">{{ item.necessary ? "是" : "否" }}</div>
         <div class="end2">
           <button type="button" @click="editData(index)">編輯</button>
         </div>
@@ -147,7 +181,6 @@ export default {
     <button type="button" @click="submit" class="nextbtn">送出</button>
   </form>
 </template>
-
 
 <style scoped lang="scss">
 .qu {
@@ -217,21 +250,27 @@ textarea {
     background-color: rgb(100, 97, 97);
     .deletebox {
       width: 3%;
+      background-color: rgb(100, 97, 97);
     }
     .number1 {
       width: 7%;
+      background-color: rgb(100, 97, 97);
     }
     .name1 {
       width: 45%;
+      background-color: rgb(100, 97, 97);
     }
     .state1 {
       width: 25%;
+      background-color: rgb(100, 97, 97);
     }
     .star1 {
       width: 10%;
+      background-color: rgb(100, 97, 97);
     }
     .end1 {
       width: 10%;
+      background-color: rgb(100, 97, 97);
     }
   }
   .fakedata {
@@ -239,10 +278,6 @@ textarea {
     height: 20%;
     display: flex;
     border-bottom: 1px solid black;
-    input {
-      pointer-events: none;
-      cursor: not-allowed;
-    }
     .deletebox {
       width: 3%;
       height: 100%;
@@ -292,23 +327,23 @@ textarea {
     }
   }
 }
-.addbtn{
+.addbtn {
   font-size: 2dvw;
   position: absolute;
   top: 30%;
   right: 15%;
 }
-.nextbtn{
+.nextbtn {
   font-size: 2dvw;
   position: absolute;
   bottom: 5%;
   right: 5%;
 }
-.pagination{
+.pagination {
   position: absolute;
   bottom: 5%;
-  left: 50%;
-  button{
+  left: 48%;
+  button {
     font-size: 2dvw;
   }
 }

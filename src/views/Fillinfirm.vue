@@ -1,4 +1,6 @@
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -17,7 +19,7 @@ export default {
     };
   },
   mounted() {
-    this.loadData(); 
+    this.loadData();
   },
   methods: {
     loadData() {
@@ -40,6 +42,52 @@ export default {
       } else {
         console.log("未找到問卷數據");
       }
+    },
+    submit() {
+      const feedbackList = this.questions.map((question) => ({
+        quizId: this.quizId,
+        quId: question.id,
+        name: this.playerData.name,
+        phone: this.playerData.phone,
+        email: this.playerData.email,
+        age: this.playerData.age,
+        ans:
+          question.answer ||
+          question.selectedOption ||
+          question.selectedOptions.join(";"),
+        fillinDateTime: new Date().toISOString(),
+      }));
+
+      axios
+        .post("http://localhost:8080/quiz/fillin", { feedbackList })
+        .then((response) => {
+          if (response.status === 200 && response.data.message === "Success!") {
+            console.log("提交成功", response.data);
+            alert("提交成功！");
+            this.$router.push({ name: "PlayerFirstList" });
+          } else {
+            console.error("提交失敗", response.data);
+            alert("提交失敗：Email重複使用");
+          }
+        })
+        .catch((error) => {
+          let errorMessage = "未知錯誤";
+
+          if (error.response) {
+            const responseData = error.response.data;
+            errorMessage = responseData.message;
+
+            if (
+              error.response.status === 400 &&
+              errorMessage.includes("email duplicate")
+            ) {
+              alert("Email 重複，請檢查您的 email。");
+            } else {
+              console.error("提交失敗", errorMessage);
+              alert("提交失敗：" + errorMessage);
+            }
+          }
+        });
     },
     edit() {
       sessionStorage.setItem(
@@ -134,6 +182,7 @@ export default {
     </div>
     <div class="action-buttons">
       <button @click="edit">修改</button>
+      <button @click="submit">提交</button>
     </div>
   </div>
 </template>

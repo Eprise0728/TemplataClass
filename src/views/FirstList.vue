@@ -32,8 +32,8 @@ export default {
     },
     async deleteSelected() {
       try {
-        const idsToDelete = this.selectedQuizzes.filter(id => {
-          const quiz = this.quizzes.find(q => q.id === id);
+        const idsToDelete = this.selectedQuizzes.filter((id) => {
+          const quiz = this.quizzes.find((q) => q.id === id);
           return quiz && !quiz.published;
         });
 
@@ -41,18 +41,20 @@ export default {
           alert("沒有符合刪除條件的問卷。");
           return;
         }
-        
-        await axios.post("http://localhost:8080/quiz/delete", { quizIdList: idsToDelete });
+
+        await axios.post("http://localhost:8080/quiz/delete", {
+          quizIdList: idsToDelete,
+        });
         alert("問卷刪除成功！");
-        
+
         this.searchQuiz();
       } catch (error) {
         console.error("刪除問卷時發生錯誤:", error);
         alert("刪除問卷失敗，請稍後再試。");
       }
-    }
+    },
   },
-  
+
   computed: {
     paginatedQuizzes() {
       const start = (this.currentPage - 1) * this.pageSize;
@@ -78,12 +80,14 @@ export default {
         <input v-model="startDate" type="date" class="date" />
         <span class="datetext">到</span>
         <input v-model="endDate" type="date" class="date" />
-        <button @click="searchQuiz" class="datebtn">搜尋</button>
+        <button @click="searchQuiz" class="datebtn" style="cursor: pointer">
+          搜尋
+        </button>
       </div>
     </div>
 
     <div class="icon1">
-        <i class="fa-solid fa-trash-can" @click="deleteSelected"></i>
+      <i class="fa-solid fa-trash-can" @click="deleteSelected"></i>
       <RouterLink to="./Question" class="routeitem">
         <i class="fa-solid fa-plus"></i>
       </RouterLink>
@@ -102,11 +106,19 @@ export default {
 
       <div v-for="quiz in paginatedQuizzes" :key="quiz.id" class="fakedata">
         <div class="deletebox">
-          <input type="checkbox" :value="quiz.id" v-model="selectedQuizzes" :disabled="quiz.published != 0"/>
+          <input
+            type="checkbox"
+            :value="quiz.id"
+            v-model="selectedQuizzes"
+            :disabled="quiz.published != 0"
+          />
         </div>
         <div class="number2">{{ quiz.id }}</div>
         <div class="name2">
-          <RouterLink v-if="!quiz.published || new Date() < new Date(quiz.startDate)" :to="{ name: 'UpdataQuestion', params: { id: quiz.id } }">{{ quiz.name }}
+          <RouterLink
+            v-if="!quiz.published || new Date() < new Date(quiz.startDate)"
+            :to="{ name: 'UpdataQuestion', params: { id: quiz.id } }"
+            >{{ quiz.name }}
           </RouterLink>
           <span v-else>{{ quiz.name }}</span>
         </div>
@@ -138,10 +150,16 @@ export default {
         <div class="name2">沒有找到符合條件的問卷。</div>
       </div>
     </div>
-    <div class="pagination">
-      <button @click="currentPage--" :disabled="currentPage === 1"><</button>
-      <span>第 {{ currentPage }} 頁 </span>
-      <button @click="currentPage++" :disabled="currentPage === totalPages">></button>
+    <div class="paginbox">
+      <div class="pagination">
+        <button @click="currentPage--" :disabled="currentPage === 1">
+          上一頁
+        </button>
+        <span>第 {{ currentPage }} 頁 </span>
+        <button @click="currentPage++" :disabled="currentPage === totalPages">
+          下一頁
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -160,7 +178,6 @@ export default {
   align-items: center;
   position: relative;
   font-size: 1.5dvw;
-  
   .textBox1 {
     width: 70%;
     height: 30%;
@@ -179,11 +196,13 @@ export default {
       }
     }
     .datebox {
-      width: 65%;
+      width: 60%;
       height: 8%;
       position: absolute;
       top: 14%;
-      left: 11%;
+      left: 21.1%;
+      display: flex;
+      justify-content: start;
       .date {
         width: 20%;
         height: 50%;
@@ -213,12 +232,12 @@ export default {
     font-size: 1.8dvw;
     display: flex;
     justify-content: space-evenly;
-    .fa-trash-can{
+    .fa-trash-can {
       cursor: pointer;
     }
   }
   .textBox2 {
-    margin-top: 6%;
+    margin-top: 4%;
     margin-bottom: 3%;
     width: 70%;
     height: 70dvh;
@@ -234,24 +253,31 @@ export default {
       background-color: rgb(100, 97, 97);
       .deletebox {
         width: 3%;
+        background-color: rgb(100, 97, 97);
       }
       .number1 {
         width: 7%;
+        background-color: rgb(100, 97, 97);
       }
       .name1 {
         width: 30%;
+        background-color: rgb(100, 97, 97);
       }
       .state1 {
         width: 10%;
+        background-color: rgb(100, 97, 97);
       }
       .star1 {
         width: 20%;
+        background-color: rgb(100, 97, 97);
       }
       .end1 {
         width: 20%;
+        background-color: rgb(100, 97, 97);
       }
       .result1 {
         width: 10%;
+        background-color: rgb(100, 97, 97);
       }
     }
     .fakedata {
@@ -281,6 +307,10 @@ export default {
         align-items: center;
         justify-content: center;
         border-left: 1px solid black;
+        a {
+          text-decoration: none;
+          color: rgb(0, 34, 255);
+        }
       }
       .state2 {
         width: 10%;
@@ -323,11 +353,12 @@ export default {
     }
   }
 }
-.pagination {
+.paginbox {
+  width: 20%;
+  height: 10%;
   position: absolute;
-  bottom: 1%;
-  left: 42%;
-
+  left: 37%;
+  bottom: -5%;
   button {
     margin: 0 10px;
     padding: 5px 10px;
@@ -336,10 +367,9 @@ export default {
 
     &:disabled {
       cursor: not-allowed;
-      opacity: 0.5;
+      background-color: rgb(100, 97, 97);
     }
   }
-
   span {
     font-size: 1.2dvw;
   }
