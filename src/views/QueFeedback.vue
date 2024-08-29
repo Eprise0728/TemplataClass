@@ -158,15 +158,17 @@ export default {
 }
 
 .pagination {
-  margin-top: 1em;
+  margin-top: 1%;
+  margin-bottom: 1%;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .pagination button {
   margin: 0 0.5em;
   padding: 0.5em 1em;
-  font-size: 1em;
+  font-size: 1dvw;
   cursor: pointer;
 }
 
