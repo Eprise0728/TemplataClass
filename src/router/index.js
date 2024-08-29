@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import Home from '../views/Home.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,7 +7,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: Home
     },
     {
       path: '/FirstList',
@@ -49,6 +49,26 @@ const router = createRouter({
       path: '/Fillinfirm',
       name: 'Fillinfirm',
       component: () => import('../views/Fillinfirm.vue')
+    },
+    {
+      path: '/Echarts:id',
+      name: 'Echarts',
+      component: () => import('../views/Echarts.vue')
+    },
+    {
+      path: '/PlayerEcharts:id',
+      name: 'PlayerEcharts',
+      component: () => import('../views/PlayerEcharts.vue')
+    },
+    {
+      path: '/QueFeedback:id',
+      name: 'QueFeedback',
+      component: () => import('../views/QueFeedback.vue')
+    },
+    {
+      path: '/QueFeedbackEc/:id/:email',
+      name: 'QueFeedbackEc',
+      component: () => import('../views/QueFeedbackEc.vue')
     },
   ]
 })

@@ -24,7 +24,9 @@ export default {
           endDate: this.endDate,
         });
         console.log(response.data);
-        this.quizzes = (response.data.quizResList || []).filter(quiz => quiz.published);
+        this.quizzes = (response.data.quizResList || []).filter(
+          (quiz) => quiz.published
+        );
       } catch (error) {
         console.error("搜索時發生錯誤:", error);
       }
@@ -45,6 +47,7 @@ export default {
 
 <template>
   <div class="firstlist">
+    <router-link to="./"><i class="fa-solid fa-house"></i></router-link>
     <div class="textBox1">
       <div class="searchbox">
         <span class="text1">問卷名稱:</span>
@@ -70,34 +73,58 @@ export default {
       </div>
 
       <div v-for="quiz in paginatedQuizzes" :key="quiz.id" class="fakedata">
-    <div class="number2">{{ quiz.id }}</div>
-    <div class="name2">
-      <RouterLink
-        v-if="quiz.published && new Date() >= new Date(quiz.startDate) && new Date() <= new Date(quiz.endDate)"
-        :to="{ name: 'Fillin', params: { id: quiz.id } }"
-      >
-        {{ quiz.name }}
-      </RouterLink>
-      <span v-else>{{ quiz.name }}</span>
-    </div>
-    <div class="state2">
-      <span
-        v-if="quiz.published && new Date() >= new Date(quiz.startDate) && new Date() <= new Date(quiz.endDate)"
-      >
-        進行中
-      </span>
-      <span v-else-if="quiz.published && new Date() > new Date(quiz.endDate)">
-        已結束
-      </span>
-      <span v-else-if="quiz.published && new Date() < new Date(quiz.startDate)">
-        尚未開始
-      </span>
-      <span v-else>未發佈</span>
-    </div>
-    <div class="star2">{{ quiz.startDate }}</div>
-    <div class="end2">{{ quiz.endDate }}</div>
-    <div class="result2">前往</div>
-  </div>
+        <div class="number2">{{ quiz.id }}</div>
+        <div class="name2">
+          <RouterLink
+            v-if="
+              quiz.published &&
+              new Date() >= new Date(quiz.startDate) &&
+              new Date() <= new Date(quiz.endDate)
+            "
+            :to="{ name: 'Fillin', params: { id: quiz.id } }"
+          >
+            {{ quiz.name }}
+          </RouterLink>
+          <span v-else>{{ quiz.name }}</span>
+        </div>
+        <div class="state2">
+          <span
+            v-if="
+              quiz.published &&
+              new Date() >= new Date(quiz.startDate) &&
+              new Date() <= new Date(quiz.endDate)
+            "
+          >
+            進行中
+          </span>
+          <span
+            v-else-if="quiz.published && new Date() > new Date(quiz.endDate)"
+          >
+            已結束
+          </span>
+          <span
+            v-else-if="quiz.published && new Date() < new Date(quiz.startDate)"
+          >
+            尚未開始
+          </span>
+          <span v-else>未發佈</span>
+        </div>
+        <div class="star2">{{ quiz.startDate }}</div>
+        <div class="end2">{{ quiz.endDate }}</div>
+        <RouterLink
+          v-if="
+            (quiz.published &&
+              new Date() >= new Date(quiz.startDate) &&
+              new Date() <= new Date(quiz.endDate)) ||
+            (quiz.published && new Date() > new Date(quiz.endDate))
+          "
+          :to="{ name: 'PlayerEcharts', params: { id: quiz.id } }"
+          class="result2"
+        >
+          前往
+        </RouterLink>
+        <p v-else class="result2" style="color: black">前往</p>
+      </div>
 
       <div v-if="quizzes.length === 0" class="fakedata no-quiz">
         <div class="name2">沒有找到符合條件的問卷。</div>
@@ -105,14 +132,14 @@ export default {
     </div>
     <div class="paginbox">
       <div class="pagination">
-      <button @click="currentPage--" :disabled="currentPage === 1">
-        上一頁
-      </button>
-      <span>第 {{ currentPage }} 頁</span>
-      <button @click="currentPage++" :disabled="currentPage === totalPages">
-        下一頁
-      </button>
-    </div>
+        <button @click="currentPage--" :disabled="currentPage === 1">
+          上一頁
+        </button>
+        <span>第 {{ currentPage }} 頁</span>
+        <button @click="currentPage++" :disabled="currentPage === totalPages">
+          下一頁
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -122,6 +149,14 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #9A9590;
+}
+.fa-house{
+  font-size: 4dvw;
+  position: absolute;
+  top: 5%;
+  left: 3%;
+  color: black;
 }
 .firstlist {
   width: 100%;
@@ -135,7 +170,7 @@ export default {
     width: 70%;
     height: 30%;
     border: 1px solid black;
-    margin-top:2%;
+    margin-top: 2%;
     .searchbox {
       width: 50%;
       height: 8%;
@@ -170,6 +205,10 @@ export default {
         height: 50%;
         font-size: 1.2dvw;
         margin-left: 2%;
+        border-radius: 10px;
+        background-color: #BEBAB7;
+        cursor: pointer;
+        border: 1px solid black;
       }
     }
   }
@@ -226,7 +265,6 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
-        
       }
       .name2 {
         width: 30%;
@@ -236,6 +274,10 @@ export default {
         justify-content: center;
         border-left: 1px solid black;
         margin-left: 10px;
+        a {
+          text-decoration: none;
+          color: rgb(0, 34, 255);
+        }
       }
       .state2 {
         width: 10%;
@@ -268,6 +310,8 @@ export default {
         align-items: center;
         justify-content: center;
         border-left: 1px solid black;
+        text-decoration: none;
+        color: rgb(0, 34, 255);
       }
       &.no-quiz {
         border-bottom: none;
@@ -278,7 +322,7 @@ export default {
     }
   }
 }
-.paginbox{
+.paginbox {
   width: 20%;
   height: 10%;
   position: absolute;
@@ -288,7 +332,10 @@ export default {
     margin: 0 10px;
     padding: 5px 10px;
     font-size: 1.2dvw;
+    background-color: #BEBAB7;
+    border-radius: 10px;
     cursor: pointer;
+    border: 1px solid black;
 
     &:disabled {
       cursor: not-allowed;

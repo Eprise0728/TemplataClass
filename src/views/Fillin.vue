@@ -43,7 +43,7 @@ export default {
           }));
           this.playerData = quizData.playerData;
         } else {
-          // 從 API 獲取資料
+          
           const response = await axios.post(
             "http://localhost:8080/quiz/search",
             {
@@ -140,13 +140,13 @@ export default {
     <div class="quiz-info">
       <p class="datebox">{{ startDate }} ~ {{ endDate }}</p>
       <p class="quiztittle">{{ quizName }}</p>
-      <p class="textdesc"><strong>問卷說明:</strong> {{ quizDescription }}</p>
+      <p class="textdesc">問卷說明:{{ quizDescription }}</p>
     </div>
     <form ref="form" @submit.prevent="submit">
       <div class="playerdata">
         <p>姓名:<input type="text" v-model="playerData.name" required /></p>
         <p>手機:<input type="text" v-model="playerData.phone" required /></p>
-        <p>E-mail:<input type="email" v-model="playerData.email" required /></p>
+        <p>E-mail:<input type="email" v-model="playerData.email" required style="margin-left: 1.9%" /></p>
         <p>年齡:<input type="text" v-model="playerData.age" required /></p>
       </div>
       <div v-if="questions.length > 0">
@@ -224,6 +224,9 @@ export default {
 </template>
 
 <style scoped="scss">
+*{
+  background-color: #9A9590;
+}
 .quiz-info {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -255,22 +258,26 @@ export default {
   }
 }
 .question {
-  margin-top: 20px;
-  margin-bottom: 10px;
-  margin-left: 2%;
-  font-size: 2dvw;
-  .questionans {
+  margin-bottom: 1em;
+  padding: 1em;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 1%;
+  font-size: 1.5dvw;
+  .questionans{
+    margin-top: 1%;
+    margin-left: 1%;
     display: flex;
     flex-direction: column;
-    margin-left: 1%;
   }
   textarea {
+    margin-top: 0.5%;
     width: 50%;
     height: 20dvh;
     overflow-wrap: break-word;
     resize: none;
     margin-left: 2%;
-    font-size: 2dvw;
+    font-size: 1.5dvw;
   }
 }
 .action-buttons {
@@ -282,6 +289,18 @@ export default {
     margin-top: 20px;
     padding: 10px 20px;
     margin-left: 10px;
+    border: 1px solid black;
   }
+}
+input{
+  border: 1px solid black;
+}
+button {
+    margin: 0 10px;
+    padding: 5px 10px;
+    font-size: 1.2dvw;
+    background-color: #bebab7;
+    border-radius: 10px;
+    cursor: pointer;
 }
 </style>

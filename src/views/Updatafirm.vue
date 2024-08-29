@@ -21,7 +21,12 @@ export default {
       const quizData = sessionStorage.getItem("quiz");
       if (quizData) {
         this.quiz = JSON.parse(quizData);
-        console.log("Quiz Data:", this.quiz);
+
+        this.quiz.quesList.forEach((question) => {
+          if (typeof question.options === "string") {
+            question.options = question.options.split(";");
+          }
+        });
       } else {
         console.error("未找到問卷資料");
       }
@@ -41,17 +46,19 @@ export default {
             qu: q.qu,
             type: q.type,
             necessary: q.necessary,
-            options: q.options,
+            options: q.options ? q.options.join(";") : "",
           })),
         };
 
         await axios.post("http://localhost:8080/quiz/update", requestData);
         alert(published ? "問卷更新並發佈成功！" : "問卷更新成功！");
+        this.$router.push("/FirstList");
       } catch (error) {
         console.error("更新問卷時發生錯誤:", error);
         alert(
           published ? "更新並發佈失敗，請稍後再試。" : "更新失敗，請稍後再試。"
         );
+        this.$router.push(`/UpdataQuestion${this.quiz.id}`);
       }
     },
   },
@@ -60,30 +67,164 @@ export default {
 
 <template>
   <div v-if="quiz">
-    <h2>預覽頁</h2>
-    <p>問卷名稱: {{ quiz.name }}</p>
-    <p>問卷描述: {{ quiz.description }}</p>
-    <p>開始日期: {{ quiz.startDate }}</p>
-    <p>結束日期: {{ quiz.endDate }}</p>
-
-    <div v-for="question in quiz.quesList" :key="question.id">
-      <p>編號: {{ question.id }}</p>
-      <p>問題內容: {{ question.qu }}</p>
-      <p>問卷種類: {{ questionTypeLabels[question.type] }}</p>
-      <p>必填: {{ question.necessary ? "是" : "否" }}</p>
-      <p>
-        選項:
-        {{
-          Array.isArray(question.options)
-            ? question.options.join(", ")
-            : question.options
-        }}
-      </p>
+    <div class="quiz-info">
+      <p class="datebox">{{ quiz.startDate }} ~ {{ quiz.endDate }}</p>
+      <p class="quiztittle">{{ quiz.name }}</p>
+      <p class="textdesc">問卷說明:{{ quiz.description }}</p>
     </div>
 
-    <button @click="updateQuiz(false)">更新</button>
-    <button @click="updateQuiz(true)">更新並發佈</button>
+    <div class="playerdata">
+      <p>姓名:<input type="text" disabled="true" /></p>
+      <p>手機:<input type="text" disabled="true" /></p>
+      <p>
+        E-mail:<input type="text" style="margin-left: 1.5%" disabled="true" />
+      </p>
+      <p>年齡:<input type="text" disabled="true" /></p>
+    </div>
+
+    <div v-if="quiz.quesList.length > 0 ">
+      <div
+        class="question"
+        v-for="(question, index) in quiz.quesList"
+        :key="index"
+      >
+        <p>
+          {{ question.id }}.{{ question.qu
+          }}<span v-if="question.necessary"> (必填)</span>
+        </p>
+        <p
+          class="questionans"
+          v-if="
+            question.type === '單選題' &&
+            question.options &&
+            question.options.length > 0
+          "
+        >
+          <label v-for="(option, index) in question.options" :key="index">
+            <input
+              type="radio"
+              :name="'question' + question.id"
+              :value="option"
+              disabled="true"
+            />{{ option }}
+          </label>
+        </p>
+
+        <p
+          class="questionans"
+          v-else-if="
+            question.type === '多選題' &&
+            question.options &&
+            question.options.length > 0
+          "
+        >
+          <label v-for="(option, index) in question.options" :key="index">
+            <input
+              type="checkbox"
+              :name="'question' + question.id"
+              :value="option"
+              disabled="true"
+            />
+            {{ option }}
+          </label>
+        </p>
+
+        <p v-else-if="question.type === '簡答題'">
+          <textarea
+            :name="'question' + question.id"
+            placeholder="請輸入答案"
+            readonly
+          ></textarea>
+        </p>
+      </div>
+    </div>
+
+    <div class="nextbtn">
+      <button @click="updateQuiz(false)">更新</button>
+      <button @click="updateQuiz(true)">更新並發佈</button>
+    </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped="scss">
+* {
+  background-color: #9a9590;
+}
+.quiz-info {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  .datebox {
+    text-align: end;
+    margin-right: 1%;
+    font-size: 1.5dvw;
+  }
+  .quiztittle {
+    font-size: 3dvw;
+    text-align: center;
+  }
+  .textdesc {
+    font-size: 2dvw;
+    text-align: start;
+    margin-left: 2%;
+    margin-right: 2%;
+  }
+}
+.playerdata {
+  display: flex;
+  flex-direction: column;
+  margin-left: 2%;
+  font-size: 1.5dvw;
+  input {
+    width: 30dvw;
+    margin-top: 20px;
+    margin-left: 3%;
+  }
+}
+.question {
+  margin-bottom: 1em;
+  padding: 1em;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 1%;
+  font-size: 1.5dvw;
+  .questionans{
+    margin-top: 1%;
+    margin-left: 1%;
+    display: flex;
+    flex-direction: column;
+  }
+  textarea {
+    margin-top: 0.5%;
+    width: 50%;
+    height: 20dvh;
+    overflow-wrap: break-word;
+    resize: none;
+    margin-left: 2%;
+    font-size: 2dvw;
+    padding-left: 1%;
+    padding-right: 1%;
+    border: 1px solid black;
+  }
+}
+.nextbtn {
+  display: flex;
+  justify-content: end;
+  margin-right: 2%;
+  margin-bottom: 2%;
+}
+button {
+  font-size: 1.2dvw;
+  margin-top: 20px;
+  margin-left: 10px;
+  padding: 10px 20px;
+  border: 1px solid black;
+  background-color: #bebab7;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid black;
+}
+input {
+  border: 1px solid black;
+  padding: 1%;
+}
+</style>

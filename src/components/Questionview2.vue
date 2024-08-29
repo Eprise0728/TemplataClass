@@ -123,18 +123,18 @@ export default {
     <div class="selectbox">
       <select class="select1" v-model="type">
         <option value="單選題">單選題</option>
-        <option value="複選題">多選題</option>
+        <option value="多選題">多選題</option>
         <option value="簡答題">簡答題</option>
       </select>
       <input type="checkbox" v-model="necessary" />
       <span>必填</span>
     </div>
     <div class="text2box">
-      <p class="text2">選項:(多個答案請以; 分隔)</p>
+      <p class="text2">選項: (多個答案請以; 分隔)</p>
       <textarea v-model="options" style="resize: none"></textarea>
     </div>
     <button type="button" @click="addData" class="addbtn">
-      {{ id !== null ? "編輯" : "加入" }}
+      {{ id !== null ? "編輯問題" : "新增問題" }}
     </button>
     <i class="fa-solid fa-trash-can icon1" @click="deleteSelectedQuestions"></i>
     <div class="pagination">
@@ -174,7 +174,13 @@ export default {
         <div class="state2">{{ item.type }}</div>
         <div class="star2">{{ item.necessary ? "是" : "否" }}</div>
         <div class="end2">
-          <button type="button" @click="editData(index)">編輯</button>
+          <button
+            type="button"
+            @click="editData(index)"
+            style="  padding: 1px 2px; font-size: 1.1dvw"
+          >
+            編輯
+          </button>
         </div>
       </div>
     </div>
@@ -183,6 +189,9 @@ export default {
 </template>
 
 <style scoped lang="scss">
+* {
+  background-color: #9A9590;
+}
 .qu {
   font-size: 2dvw;
   position: absolute;
@@ -192,6 +201,8 @@ export default {
     width: 40dvw;
     height: 7dvh;
     font-size: 2dvw;
+    border: 1px solid black;
+    padding: 1%;
   }
 }
 .text2 {
@@ -202,13 +213,16 @@ export default {
   font-size: 2dvw;
 }
 textarea {
-  width: 50dvw;
-  height: 15dvh;
+  width: 55dvw;
+  height: 20dvh;
   overflow-wrap: break-word;
   font-size: 2dvw;
   position: absolute;
   top: 25%;
-  left: 16.1%;
+  left: 17.5%;
+  border: 1px solid black;
+  padding-left: 0.5%;
+  padding-right: 1%;
 }
 .selectbox {
   width: 20%;
@@ -225,13 +239,15 @@ textarea {
   }
   select {
     font-size: 1.5dvw;
+    border: 1px solid black;
   }
 }
 .icon1 {
-  font-size: 1.8dvw;
+  font-size: 1.7dvw;
   position: absolute;
-  top: 50%;
-  left: 16%;
+  top: 51%;
+  left: 18.5%;
+  cursor: pointer;
 }
 .text3box {
   width: 55dvw;
@@ -239,7 +255,7 @@ textarea {
   border: 1px solid black;
   position: absolute;
   bottom: 15%;
-  left: 16%;
+  left: 17.5%;
   .texttitle {
     display: flex;
     align-items: center;
@@ -330,8 +346,8 @@ textarea {
 .addbtn {
   font-size: 2dvw;
   position: absolute;
-  top: 30%;
-  right: 15%;
+  top: 33%;
+  right: 3%;
 }
 .nextbtn {
   font-size: 2dvw;
@@ -344,7 +360,20 @@ textarea {
   bottom: 5%;
   left: 48%;
   button {
-    font-size: 2dvw;
+    margin: 0 10px;
+    padding: 5px 10px;
+    font-size: 1.2dvw;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+      background-color: rgb(100, 97, 97);
+    }
   }
+}
+button {
+  background-color: #bebab7;
+  border-radius: 10px;
+  cursor: pointer;
 }
 </style>

@@ -36,6 +36,7 @@ export default {
             : q.options
             ? q.options.split(";")
             : [],
+          selectedOptions: q.selectedOptions ? q.selectedOptions : [],
         }));
         this.playerData = quizData.playerData;
         this.quizId = quizData.quizId;
@@ -44,6 +45,11 @@ export default {
       }
     },
     submit() {
+      const offset = 8;
+      const now = new Date();
+      const localTime = new Date(now.getTime() + offset * 60 * 60 * 1000);
+      const fillinDateTime = localTime.toISOString();
+
       const feedbackList = this.questions.map((question) => ({
         quizId: this.quizId,
         quId: question.id,
@@ -55,7 +61,7 @@ export default {
           question.answer ||
           question.selectedOption ||
           question.selectedOptions.join(";"),
-        fillinDateTime: new Date().toISOString(),
+        fillinDateTime: fillinDateTime,
       }));
 
       axios
@@ -65,6 +71,7 @@ export default {
             console.log("提交成功", response.data);
             alert("提交成功！");
             this.$router.push({ name: "PlayerFirstList" });
+            console.log(fillinDateTime);
           } else {
             console.error("提交失敗", response.data);
             alert("提交失敗：Email重複使用");
@@ -124,48 +131,37 @@ export default {
     <div v-if="questions.length > 0">
       <div class="question" v-for="(question, index) in questions" :key="index">
         <p>
-          {{ question.id }}.{{ question.qu
-          }}<span v-if="question.necessary"> (必填)</span>
+          {{ question.id }}.{{ question.qu }}
+          <span v-if="question.necessary"> (必填)</span>
         </p>
         <p
           class="questionans"
-          v-if="
-            question.type === '單選題' &&
-            question.options &&
-            question.options.length > 0
-          "
+          v-if="question.type === '單選題' && question.options.length > 0"
         >
-          <label
-            v-for="(option, optionIndex) in question.options"
-            :key="optionIndex"
-          >
+          <label v-if="question.selectedOption">
             <input
               type="radio"
               :name="'question' + question.id"
-              :value="option"
-              :checked="question.selectedOption === option"
+              :value="question.selectedOption"
+              :checked="true"
               disabled
             />
-            {{ option }}
+            {{ question.selectedOption }}
           </label>
         </p>
         <p
           class="questionans"
-          v-else-if="
-            question.type === '多選題' &&
-            question.options &&
-            question.options.length > 0
-          "
+          v-else-if="question.type === '多選題' && question.options.length > 0"
         >
           <label
-            v-for="(option, optionIndex) in question.options"
+            v-for="(option, optionIndex) in question.selectedOptions"
             :key="optionIndex"
           >
             <input
               type="checkbox"
               :name="'question' + question.id"
               :value="option"
-              :checked="question.selectedOptions.includes(option)"
+              :checked="true"
               disabled
             />
             {{ option }}
@@ -188,6 +184,9 @@ export default {
 </template>
 
 <style scoped="scss">
+* {
+  background-color: #9a9590;
+}
 .quiz-info {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -201,7 +200,7 @@ export default {
     text-align: center;
   }
   .textdesc {
-    font-size: 2dvw;
+    font-size: 1.5dvw;
     text-align: start;
     margin-left: 2%;
     margin-right: 2%;
@@ -211,30 +210,55 @@ export default {
   display: flex;
   flex-direction: column;
   margin-left: 2%;
-  font-size: 2dvw;
+  font-size: 1.5dvw;
   input {
-    font-size: 2dvw;
+    font-size: 1.5dvw;
     margin-top: 20px;
     margin-left: 4%;
   }
 }
+
 .question {
-  margin-top: 20px;
-  margin-bottom: 10px;
-  margin-left: 2%;
-  font-size: 2dvw;
+  margin-bottom: 1em;
+  padding: 1em;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 1%;
+  font-size: 1.5dvw;
   .questionans {
+    margin-top: 1%;
+    margin-left: 1%;
     display: flex;
     flex-direction: column;
-    margin-left: 1%;
   }
   textarea {
+    margin-top: 0.5%;
     width: 50%;
     height: 20dvh;
     overflow-wrap: break-word;
     resize: none;
     margin-left: 2%;
-    font-size: 2dvw;
+    font-size: 1.5dvw;
   }
+}
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 2%;
+  margin-bottom: 2%;
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    margin-left: 10px;
+    border: 1px solid black;
+  }
+}
+button {
+  margin: 0 10px;
+  padding: 5px 10px;
+  font-size: 1.2dvw;
+  background-color: #bebab7;
+  border-radius: 10px;
+  cursor: pointer;
 }
 </style>

@@ -70,6 +70,7 @@ export default {
 
 <template>
   <div class="firstlist">
+    <router-link to="./"><i class="fa-solid fa-house"></i></router-link>
     <div class="textBox1">
       <div class="searchbox">
         <span class="text1">問卷名稱:</span>
@@ -143,7 +144,19 @@ export default {
         </div>
         <div class="star2">{{ quiz.startDate }}</div>
         <div class="end2">{{ quiz.endDate }}</div>
-        <div class="result2">前往</div>
+        <RouterLink
+          v-if="
+            (quiz.published &&
+              new Date() >= new Date(quiz.startDate) &&
+              new Date() <= new Date(quiz.endDate)) ||
+            (quiz.published && new Date() > new Date(quiz.endDate))
+          "
+          :to="{ name: 'QueFeedback', params: { id: quiz.id } }"
+          class="result2"
+        >
+          前往
+        </RouterLink>
+        <p v-else class="result2" style="color: black">前往</p>
       </div>
 
       <div v-if="quizzes.length === 0" class="fakedata no-quiz">
@@ -169,6 +182,14 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #9a9590;
+}
+.fa-house{
+  font-size: 4dvw;
+  position: absolute;
+  top: 5%;
+  left: 3%;
+  color: black;
 }
 .firstlist {
   width: 100%;
@@ -193,6 +214,7 @@ export default {
         width: 80%;
         height: 50%;
         margin-left: 2%;
+        border: 1px solid black;
       }
     }
     .datebox {
@@ -217,6 +239,8 @@ export default {
         height: 50%;
         font-size: 1.2dvw;
         margin-left: 2%;
+        border-radius: 10px;
+        background-color: #bebab7;
       }
     }
   }
@@ -228,7 +252,7 @@ export default {
     width: 10%;
     position: absolute;
     left: 14%;
-    top: 30%;
+    top: 31%;
     font-size: 1.8dvw;
     display: flex;
     justify-content: space-evenly;
@@ -291,6 +315,29 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
+        input[type="checkbox"] {
+          position: relative;
+          appearance: none;
+          width: 20px;
+          height: 20px;
+          background-color: #fff; 
+          border: 2px solid #000; 
+          border-radius: 3px;
+          cursor: pointer;
+
+          &:checked::before {
+            content: "✔";
+            position: absolute;
+            font-size: 18px;
+          }
+          
+
+          &:disabled {
+            background-color: #443C3C; 
+            border: 2px solid #443C3C; 
+            cursor: not-allowed;
+          }
+        }
       }
       .number2 {
         width: 7%;
@@ -343,6 +390,8 @@ export default {
         align-items: center;
         justify-content: center;
         border-left: 1px solid black;
+        text-decoration: none;
+        color: rgb(0, 34, 255);
       }
       &.no-quiz {
         border-bottom: none;
@@ -357,12 +406,14 @@ export default {
   width: 20%;
   height: 10%;
   position: absolute;
-  left: 37%;
+  left: 40%;
   bottom: -5%;
   button {
     margin: 0 10px;
     padding: 5px 10px;
     font-size: 1.2dvw;
+    background-color: #bebab7;
+    border-radius: 10px;
     cursor: pointer;
 
     &:disabled {

@@ -2,10 +2,10 @@
 export default {
   data() {
     return {
-      quizName: '', 
-      quizDescription: '', 
-      startDate: '',
-      endDate: '' 
+      quizName: "",
+      quizDescription: "",
+      startDate: "",
+      endDate: "",
     };
   },
   mounted() {
@@ -24,8 +24,8 @@ export default {
     },
     formatDate(date) {
       const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
       return `${year}-${month}-${day}`;
     },
     validateDates() {
@@ -34,32 +34,43 @@ export default {
       const endDate = new Date(this.endDate).setHours(0, 0, 0, 0);
 
       if (startDate < today || endDate < today) {
-        alert('開始時間和結束時間不能是今天或更早。');
+        alert("開始時間和結束時間不能是今天或更早。");
         return false;
       }
       if (startDate > endDate) {
-        alert('開始時間不能晚於結束時間。');
+        alert("開始時間不能晚於結束時間。");
         return false;
       }
       return true;
     },
     submitForm() {
-      if (this.validateDates() && this.quizName && this.quizDescription && this.startDate && this.endDate) {
-        sessionStorage.setItem('quizData', JSON.stringify({
-          quizName: this.quizName,
-          quizDescription: this.quizDescription,
-          startDate: this.startDate,
-          endDate: this.endDate
-        }));
-        this.$emit('go-to-view2');
+      if (
+        this.validateDates() &&
+        this.quizName &&
+        this.quizDescription &&
+        this.startDate &&
+        this.endDate
+      ) {
+        sessionStorage.setItem(
+          "quizData",
+          JSON.stringify({
+            quizName: this.quizName,
+            quizDescription: this.quizDescription,
+            startDate: this.startDate,
+            endDate: this.endDate,
+          })
+        );
+        this.$emit("go-to-view2");
       } else {
-        alert('請填寫所有必填欄位。');
+        alert("請填寫所有必填欄位。");
       }
+    },
+    goBack() {
+      this.$router.push('/FirstList');
     }
-  }
+  },
 };
 </script>
-
 
 <template>
   <div>
@@ -69,7 +80,7 @@ export default {
     </p>
     <div class="text2box">
       <p class="text2">問卷說明:</p>
-      <textarea v-model="quizDescription" style="resize: none;"></textarea>
+      <textarea v-model="quizDescription" style="resize: none"></textarea>
     </div>
     <p class="text3">
       開始時間:
@@ -80,11 +91,14 @@ export default {
       <input v-model="endDate" type="date" />
     </p>
     <button @click="submitForm" class="nextbtn">下一步</button>
+    <button @click="goBack" class="backlistbtn">取消</button>
   </div>
 </template>
 
 <style scoped lang="scss">
-
+* {
+  background-color: #9a9590;
+}
 .text1 {
   font-size: 2dvw;
   position: absolute;
@@ -94,6 +108,8 @@ export default {
     width: 50dvw;
     height: 7dvh;
     font-size: 2dvw;
+    border: 1px solid black;
+    padding: 1%;
   }
 }
 .text2 {
@@ -110,7 +126,10 @@ textarea {
   font-size: 2dvw;
   position: absolute;
   top: 25%;
-  left: 21.3%;
+  left: 22.5%;
+  border: 1px solid black;
+  padding-left: 0.5%;
+  padding-right: 1%;
 }
 .text3 {
   font-size: 2dvw;
@@ -130,10 +149,21 @@ textarea {
     font-size: 1.5dvw;
   }
 }
-.nextbtn{
+.nextbtn {
   font-size: 2dvw;
   position: absolute;
   right: 8%;
   bottom: 5%;
+}
+.backlistbtn {
+      font-size: 2dvw;
+      position: absolute;
+      bottom: 5%;
+      right: 20%;
+    }
+button {
+  background-color: #bebab7;
+  border-radius: 10px;
+  cursor: pointer;
 }
 </style>

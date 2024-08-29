@@ -73,13 +73,13 @@ export default {
     <div class="quiz-info">
       <p class="datebox">{{ startDate }} ~ {{ endDate }}</p>
       <p class="quiztittle">{{ quizName }}</p>
-      <p class="textdesc"><strong>問卷說明:</strong> {{ quizDescription }}</p>
+      <p class="textdesc"><strong>問卷說明:</strong>{{ quizDescription }}</p>
     </div>
     <div class="playerdata">
       <p>姓名:<input type="text" disabled="true" /></p>
       <p>手機:<input type="text" disabled="true" /></p>
       <p>
-        E-mail:<input type="text" style="margin-left: 2.5%" disabled="true" />
+        E-mail:<input type="text" style="margin-left: 1.5%" disabled="true" />
       </p>
       <p>年齡:<input type="text" disabled="true" /></p>
     </div>
@@ -121,7 +121,8 @@ export default {
               :name="'question' + question.id"
               :value="option"
               disabled="true"
-            />{{ option }}
+            />
+            {{ option }}
           </label>
         </p>
 
@@ -139,14 +140,13 @@ export default {
       <button @click="submitQuiz(false)">儲存問卷</button>
       <button @click="submitQuiz(true)">儲存問卷並發佈</button>
     </div>
-
-    <div v-if="responseMessage">
-      <p :class="responseClass">{{ responseMessage }}</p>
-    </div>
   </div>
 </template>
 
-<style scoped>
+<style scoped = "scss">
+*{
+        background-color: #9A9590;
+}
 .quiz-info {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -170,30 +170,38 @@ export default {
   display: flex;
   flex-direction: column;
   margin-left: 2%;
-  font-size: 2dvw;
+  font-size: 1.5dvw;
   input {
-    font-size: 2dvw;
+    width: 30dvw;
+    font-size: 1dvw;
     margin-top: 20px;
-    margin-left: 4%;
+    margin-left: 3%;
   }
 }
 .question {
-  margin-top: 20px;
-  margin-bottom: 10px;
-  margin-left: 2%;
-  font-size: 2dvw;
-  .questionans {
+  margin-bottom: 1em;
+  padding: 1em;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 1%;
+  font-size: 1.5dvw;
+  .questionans{
+    margin-top: 1%;
+    margin-left: 1%;
     display: flex;
     flex-direction: column;
-    margin-left: 1%;
   }
   textarea {
+    margin-top: 0.5%;
     width: 50%;
     height: 20dvh;
     overflow-wrap: break-word;
     resize: none;
     margin-left: 2%;
     font-size: 2dvw;
+    padding-left: 1%;
+    padding-right: 1%;
+    border: 1px solid black;
   }
 }
 .nextbtn {
@@ -202,11 +210,20 @@ export default {
   margin-right: 2%;
   margin-bottom: 2%;
 }
+
 button {
+  font-size: 1.2dvw;
   margin-top: 20px;
+  margin-left: 10px;
   padding: 10px 20px;
+  border: 1px solid black;
+  background-color: #bebab7;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid black;
 }
-.error {
-  color: red;
+input {
+  border: 1px solid black;
+  padding: 1%;
 }
 </style>
